@@ -9,21 +9,23 @@
 
 <body>
     <h1>Cloud HERVY</h1>
-    <p>Upload your files here</p>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" />
-        <input type="submit" value="Upload" />
-    </form>
-    <h2>Files</h2>
-    <ul>
-        <% files.forEach(file => { %>
-            <li>
-                <a href="/download/<%= file %>">
+    <section>
+        <form action="" method="post" enctype="multipart/form-data">
+            <label for="file">File</label>
+            <input type="file" name="file">
+            <button>Submit</button>
+        </form>
+    </section>
+    <section class="uploaded-files">
+        <h2>Uploaded files</h2>
+        <ul>
+            <% files.forEach(file=> { %>
+                <li>
                     <%= file %>
-                </a>
-            </li>
-        <% }); %>
-    </ul>
+                </li>
+            <% }); %>
+        </ul>
+    </section>
 </body>
 
 </html>
