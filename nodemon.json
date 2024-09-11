@@ -1,0 +1,4 @@
+{
+    "whatch": ["src", "views", "public"],
+    "ignore": ["metadata.json", "uploads"]
+}

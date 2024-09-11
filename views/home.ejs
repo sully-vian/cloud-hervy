@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Cloud HERVY</title>
 </head>
 
@@ -19,9 +20,10 @@
     <section class="uploaded-files">
         <h2>Uploaded files</h2>
         <ul>
-            <% files.forEach(file=> { %>
+            <% Object.keys(files).forEach(filePath => { %>
                 <li>
-                    <%= file %>
+                    <% const file = files[filePath]; %>
+                    <%- include("_file-preview.ejs", {file: file}) %>
                 </li>
             <% }); %>
         </ul>
