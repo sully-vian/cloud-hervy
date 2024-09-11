@@ -3,7 +3,7 @@ import fs from "fs";
 import { join, relative } from "path";
 import { uploadsDir } from "./upload";
 
-const metadataFile = join(__dirname, "..", "metadata.json");
+ export const metadataFile = join(__dirname, "..", "metadata.json");
 
 function saveMetadata(file: Express.Multer.File): void {
     let metadata: { [key: string]: any } = [];

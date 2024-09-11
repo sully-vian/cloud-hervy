@@ -1,7 +1,7 @@
 import { Router } from "express";
 import fs from "fs";
 import { join } from "path";
-import { uploadFile } from "./fileController";
+import { uploadFile, metadataFile } from "./fileController";
 import { uploads, uploadsDir } from "./upload";
 
 const router = Router();
@@ -11,8 +11,9 @@ router.get("/favicon.ico", (_req, res) => {
 });
 
 router.get("/", (_req, res) => {
-    const uploadedFiles = fs.readdirSync(uploadsDir);
-    res.render("home", { files: uploadedFiles });
+    const rawData = fs.readFileSync(metadataFile, "utf8");
+    const metadata = JSON.parse(rawData);
+    res.render("home", { files: metadata });
 });
 
 router.post("/", uploads.single("new file"), uploadFile);
