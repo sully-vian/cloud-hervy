@@ -3,7 +3,7 @@ import fs from "fs";
 import multer from "multer";
 import { join } from "path";
 
-const uploadsDir = join(__dirname, "uploads");
+const uploadsDir = join(__dirname, "..", "uploads");
 
 fs.mkdirSync(uploadsDir, { recursive: true }); // create "uploads/" if it doesn't exist
 

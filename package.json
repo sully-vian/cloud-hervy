@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./build/server.js",
     "build": "tsc",
-    "devStart": "nodemon --exec ts-node ./src/server.ts"
+    "devStart": "nodemon --exec ts-node ./src/server.ts",
+    "purge": "rm ./uploads/* && echo \"{}\" > ./metadata.json"
   },
   "repository": {
     "type": "git",
