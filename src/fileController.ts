@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import fs from "fs";
-import { join } from "path";
+import { join, relative } from "path";
+import { uploadsDir } from "./upload";
 
-const metadataFile = join(__dirname, "metadata.json");
+const metadataFile = join(__dirname, "..", "metadata.json");
 
 function saveMetadata(file: Express.Multer.File): void {
     let metadata: { [key: string]: any } = [];
@@ -10,13 +11,15 @@ function saveMetadata(file: Express.Multer.File): void {
         const rawData = fs.readFileSync(metadataFile, "utf8"); // read metadata file
         metadata = JSON.parse(rawData); // parse metadata file
     }
+    const relativePath = relative(uploadsDir, file.path); // get relative path of file
 
     // add new file metadata
-    metadata[file.originalname] = {
+    metadata[relativePath] = {
+        name: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
         uploadDate: new Date().toISOString(),
-        path: file.path // useless until the uploadsDir is oragnised in multiple directories
+        path: relativePath // useless until the uploadsDir is organised in multiple directories
     };
 
     fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2)); // write metadata to file
