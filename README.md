@@ -1,6 +1,6 @@
 # Cloud HERVY: a google drive clone
 
-## installing
+## Installation
 
 to install required packages for production run:
 
@@ -13,6 +13,8 @@ to start the server run:
 ```bash
 npm run start
 ```
+
+## Development
 
 to install required packages for development run:
 
