@@ -22,7 +22,7 @@ function saveMetadata(file: Express.Multer.File): void {
         path: relativePath // useless until the uploadsDir is organised in multiple directories
     };
 
-    fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2)); // write metadata to file
+    fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2), "utf-8"); // write metadata to file
 }
 
 export function uploadFile(req: Request, res: Response) {
