@@ -1,13 +1,17 @@
 <article class="file-preview">
-    <% if (file.mimetype.startsWith("image/")) { %>
-        <img src="/<%= file.path %>" alt="<%= file.name %>" width="100" />
-    <% } else { %>
-    <% } %>
-    <div class="file-info">
+    <button class="file-name" dialog-id="<%= file.name %>">
+        <%= file.name %>
+    </button>
+
+    <dialog class="file-info" id="<%= file.name %>">
+        <button class="close-button">X</button>
         <p>Name: <%= file.name %></p>
-        <p>Mimetype: <%= file.mimetype %></p>
         <p>Size: <%= (file.size / 1024).toFixed(2) %> KB</p>
         <p>Upload date: <%= file.uploadDate %></p>
-        <p>Path: <%= file.path %></p>
-    </div>
+        <% if (file.description) { %>
+            <p>Description: <%= file.description %></p>
+        <% } %>
+    </dialog>
+
+    <a href="/download/<%= file.path %>">Download</a>
 </article>
