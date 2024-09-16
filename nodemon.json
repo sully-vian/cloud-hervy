@@ -1,4 +1,4 @@
 {
-    "whatch": ["src", "views", "public"],
+    "whatch": ["src/*", "views/*", "public/*"],
     "ignore": ["metadata.json", "uploads"]
 }
