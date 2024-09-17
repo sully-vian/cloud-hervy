@@ -43,6 +43,7 @@ export function uploadFile(req: Request, res: Response) {
     const file: Express.Multer.File = req.file;
     saveMetadata(file, req.body["file desc"]);
 
-    res.redirect("/");
+    // res.redirect("/");
     // res.send("file uploaded successfully !");
+    res.json({ success: true, message: "file uploaded successfully !" });
 }
