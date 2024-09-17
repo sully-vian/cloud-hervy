@@ -16,7 +16,7 @@
 <body>
     <h1>Cloud HERVY</h1>
     <section>
-        <form action="/upload" method="post" enctype="multipart/form-data">
+        <form id="upload-form" enctype="multipart/form-data">
             <input type="file" name="new file" id="file-input" required>
             <textarea type="text" name="file desc" placeholder="A short description of your file (optional)"></textarea>
             <button id="upload-button">Upload</button>
@@ -24,11 +24,9 @@
     </section>
     <section class="uploaded-files">
         <h2>Uploaded files</h2>
-        <ul>
+        <ul class="uploaded-files-list">
             <% Object.keys(files).forEach(filePath => { %>
-                <li>
-                    <%- include("_file-preview.ejs", {file: files[filePath]}) %>
-                </li>
+                <%- include("_file-preview.ejs", {file: files[filePath]}) %>
             <% }); %>
         </ul>
     </section>
