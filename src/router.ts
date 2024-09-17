@@ -7,7 +7,7 @@ import { uploads, uploadsDir } from "./upload";
 export const router = Router();
 
 router.get("/favicon.ico", (_req: Request, res: Response) => {
-    res.sendFile(join(__dirname, "public", "logo.png"));
+    res.sendFile(join(__dirname, "..", "public", "logo.png"));
 });
 
 router.get("/", (_req: Request, res: Response) => {
