@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import fs from "fs";
 import { join, relative } from "path";
 import { uploadsDir } from "./upload";
+import { wss } from "./server";
+import WebSocket from "ws";
 
 export const metadataFile = join(__dirname, "..", "metadata.json");
 
@@ -22,6 +24,14 @@ function saveMetadata(file: Express.Multer.File, fileDesc: string): void {
     };
 
     fs.writeFileSync(metadataFile, JSON.stringify(metadata, null, 2), "utf-8"); // write metadata to file
+
+    // Notify all connected clients about the new file
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            const fileMetadata = JSON.stringify({ type: "newFile", file: metadata[relativePath] });
+            client.send(fileMetadata);
+        }
+    });
 }
 
 export function uploadFile(req: Request, res: Response) {

@@ -1,6 +1,9 @@
-import express from "express";
+import express, { Request, RequestHandler } from "express";
 import fs from "fs";
+import { IncomingMessage } from "http";
 import https from "https";
+import { Socket } from "net";
+import { WebSocketServer } from "ws";
 import { metadataFile } from "./fileController";
 import { getLocalIpAddress } from "./networkUtils";
 import { router } from "./router";
@@ -26,8 +29,25 @@ const options = {
 const PORT = 3000;
 const LOCAL_IP = getLocalIpAddress();
 
-https.createServer(options, app).listen(PORT, LOCAL_IP, () => {
-    // time is the currennt time hh:mm:ss
+const server = https.createServer(options, app).listen(PORT, LOCAL_IP, () => {
     const time = new Date().toLocaleTimeString();
     console.log(`[${time}] Server running at https://${LOCAL_IP}:${PORT}`);
+});
+
+export const wss = new WebSocketServer({ noServer: true });
+
+// WebSocket server listening for new connections
+wss.on("connection", () => {
+    console.log("Client connected");
+});
+
+wss.on("close", () => {
+    console.log("Client disconnected");
+});
+
+// WebSocket server listening for upgrade requests
+server.on("upgrade", (req: IncomingMessage, socket: Socket, head: Buffer) => {
+    wss.handleUpgrade(req, socket, head, (ws) => {
+        wss.emit("connection", ws, req);
+    });
 });
