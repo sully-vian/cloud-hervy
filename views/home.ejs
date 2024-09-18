@@ -8,8 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/6.0.1/autosize.min.js"
         integrity="sha512-OjjaC+tijryqhyPqy7jWSPCRj7fcosu1zreTX1k+OWSwu6uSqLLQ2kxaqL9UpR7xFaPsCwhMf1bQABw2rCxMbg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <script src="script.js" defer></script>
+    <script type="module" src="js/main.js" defer></script>
     <title>Cloud HERVY</title>
 </head>
 
@@ -18,15 +17,15 @@
     <section>
         <form id="upload-form" enctype="multipart/form-data">
             <input type="file" name="new file" id="file-input" required>
-            <textarea type="text" name="file desc" placeholder="A short description of your file (optional)"></textarea>
+            <textarea type="text" id="desc-input" name="file desc" placeholder="A short description of your file (optional)"></textarea>
             <button id="upload-button">Upload</button>
         </form>
     </section>
     <section class="uploaded-files">
         <h2>Uploaded files</h2>
         <ul class="uploaded-files-list">
-            <% Object.keys(files).forEach(filePath => { %>
-                <%- include("_file-preview.ejs", {file: files[filePath]}) %>
+            <% Object.keys(filesMetadata).forEach(fileName => { %>
+                <%- include("_file-preview.ejs", {file: filesMetadata[fileName]}) %>
             <% }); %>
         </ul>
     </section>
