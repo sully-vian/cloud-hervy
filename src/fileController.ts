@@ -8,18 +8,17 @@ import WebSocket from "ws";
 export const metadataFile = join(__dirname, "..", "metadata.json");
 
 function saveMetadata(file: Express.Multer.File, fileDesc: string): void {
+    console.log("Saving metadata...")
     const rawData = fs.readFileSync(metadataFile, "utf8"); // read metadata file
     const metadata: { [key: string]: any } = JSON.parse(rawData); // parse metadata file
 
-    const relativePath = relative(uploadsDir, file.path); // get relative path of file
 
     // add new file metadata
-    metadata[relativePath] = {
+    metadata[file.originalname] = {
         name: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
         uploadDate: new Date().toISOString().split("T")[0],
-        path: relativePath, // useless until the uploadsDir is organised in multiple directories
         description: fileDesc
     };
 
@@ -28,7 +27,7 @@ function saveMetadata(file: Express.Multer.File, fileDesc: string): void {
     // Notify all connected clients about the new file
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-            const fileMetadata = JSON.stringify({ type: "newFile", file: metadata[relativePath] });
+            const fileMetadata = JSON.stringify({ type: "newFile", file: metadata[file.originalname] });
             client.send(fileMetadata);
         }
     });
@@ -41,9 +40,14 @@ export function uploadFile(req: Request, res: Response) {
     }
 
     const file: Express.Multer.File = req.file;
+    console.log(`Uploading ${file.originalname}...`)
     saveMetadata(file, req.body["file desc"]);
 
-    // res.redirect("/");
-    // res.send("file uploaded successfully !");
     res.json({ success: true, message: "file uploaded successfully !" });
+}
+
+export function downloadFile(req: Request, res: Response) {
+    const fileName: string = req.params["fileName"];
+    console.log(`Downloading ${fileName}...`);
+    res.download(join(uploadsDir, fileName));
 }

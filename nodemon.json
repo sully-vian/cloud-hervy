@@ -1,4 +1,4 @@
 {
-    "whatch": ["src/*", "views/*", "public/*"],
+    "watch": ["src/*.ts", "views/*.ejs", "public/*"],
     "ignore": ["metadata.json", "uploads"]
 }
