@@ -9,10 +9,11 @@ export function createFilePreview(file) {
 
     // populate new file preview elt with file data
     listItem.innerHTML = `
-    <article class="file-preview">
+    <article class="file-preview" preview-id="${file.name}">
         <button class="file-name" dialog-id="${file.name}">
             ${file.name}
         </button>
+
         <dialog class="file-info" id="${file.name}">
             <button class="close-button">X</button>
             <p>Name: ${file.name}</p>
@@ -22,7 +23,7 @@ export function createFilePreview(file) {
         </dialog>
 
         <a href="/download/${file.name}">Download</a>
-        <button class="delete-button">Delete</button>
+        <a href="/delete/${file.name}">Delete</a>
     </article>
     `;
 

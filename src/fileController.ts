@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import fs from "fs";
-import { join, relative } from "path";
-import { uploadsDir } from "./upload";
-import { wss } from "./server";
+import { join } from "path";
 import WebSocket from "ws";
+import { wss } from "./server";
+import { uploadsDir } from "./upload";
 
 export const metadataFile = join(__dirname, "..", "metadata.json");
 
@@ -40,10 +40,22 @@ export function uploadFile(req: Request, res: Response) {
     }
 
     const file: Express.Multer.File = req.file;
+
     console.log(`Uploading ${file.originalname}...`)
     saveMetadata(file, req.body["file desc"]);
 
     res.json({ success: true, message: "file uploaded successfully !" });
+}
+
+export function sendHTMLPreview(req: Request, res: Response) {
+    res.render("_file-preview", { file: req.file }, (err, html) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Error rendering home page");
+            return;
+        }
+        res.send(html);
+    });
 }
 
 export function downloadFile(req: Request, res: Response) {
