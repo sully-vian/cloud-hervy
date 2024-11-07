@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import fs from "fs";
 import { join } from "path";
-import { uploadFile, downloadFile, metadataFile } from "./fileController";
-import { uploads, uploadsDir } from "./upload";
+import { uploadFile, sendHTMLPreview, downloadFile, metadataFile } from "./fileController";
+import { uploads } from "./upload";
 
 export const router = Router();
 
@@ -26,7 +26,12 @@ router.get("/metadata", (_req: Request, res: Response) => {
 });
 
 // upload route
-router.post("/upload", uploads.single("new file"), uploadFile);
+router.post("/upload", uploads.single("new file"), (req: Request, res: Response) => {
+    uploadFile(req, res);
+    sendHTMLPreview(req, res);
+});
 
 // download route (the def of the route sets that "fileName" is a parameter)
 router.get("/download/:fileName", downloadFile);
+
+
