@@ -1,37 +1,33 @@
-import { Request, Response, Router } from "express";
-import fs from "fs";
-import { join } from "path";
-import { uploadFile, sendHTMLPreview, downloadFile, metadataFile } from "./fileController";
-import { uploads } from "./upload";
+import { Request, Response, Router, NextFunction } from "express";
+import { downloadRoute, mainRoute, metadataRoute, uploadRoute } from "./handleRoutes";
 
 export const router = Router();
 
-// favicon route
-router.get("/favicon.ico", (_req: Request, res: Response) => {
-    res.sendFile(join(__dirname, "..", "public", "logo.png"));
-});
+// logging middleware
+function logRoute(req: Request, _res: Response, next: NextFunction) {
+    console.log("Route called: " + req.originalUrl);
+    next();
+}
+
+router.use(logRoute);
 
 // main route
-router.get("/", (_req: Request, res: Response) => {
-    const rawData = fs.readFileSync(metadataFile, "utf8");
-    const metadata = JSON.parse(rawData);
-    res.render("home", { filesMetadata: metadata });
+router.get("/", (req: Request, res: Response) => {
+    mainRoute(req, res);
 });
 
-// obtain metadata route (used for pages updates without refreshing)
-router.get("/metadata", (_req: Request, res: Response) => {
-    const rawData = fs.readFileSync(metadataFile, "utf8");
-    const metadata = JSON.parse(rawData);
-    res.json(metadata);
+// metadata route
+router.get("/metadata", (req: Request, res: Response) => {
+    metadataRoute(req, res);
 });
 
 // upload route
-router.post("/upload", uploads.single("new file"), (req: Request, res: Response) => {
-    uploadFile(req, res);
-    sendHTMLPreview(req, res);
+router.post("/upload", (req: Request, res: Response) => {
+    uploadRoute(req, res);
 });
 
 // download route (the def of the route sets that "fileName" is a parameter)
-router.get("/download/:fileName", downloadFile);
-
+router.get("/download/:fileName", (req: Request, res: Response) => {
+    downloadRoute(req, res);
+});
 

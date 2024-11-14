@@ -1,0 +1,5 @@
+<ul id="file-previews-list">
+    <% Object.keys(filesMetadata).forEach(fileName => { %>
+        <%- include("_file-preview.ejs", {fileMetadata: filesMetadata[fileName]}); %>
+    <% }); %>
+</ul>
