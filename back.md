@@ -1,4 +1,4 @@
-# Architecture plan
+# Global and interactive architecture
 
 ## Main route
 

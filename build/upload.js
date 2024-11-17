@@ -4,12 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadsDir = exports.uploads = void 0;
-const fs_1 = __importDefault(require("fs"));
 const multer_1 = __importDefault(require("multer"));
 const path_1 = require("path");
 const uploadsDir = (0, path_1.join)(__dirname, "..", "uploads");
 exports.uploadsDir = uploadsDir;
-fs_1.default.mkdirSync(uploadsDir, { recursive: true }); // create "uploads/" if it doesn't exist
 const storage = multer_1.default.diskStorage({
     destination: function (_req, _file, cb) {
         cb(null, uploadsDir);

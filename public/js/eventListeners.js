@@ -1,11 +1,17 @@
-import { getFilesMetadata } from "./metadata.js";
-import { uploadFile } from "./upload.js";
+
+import { uploadFileToServer, updateFileList } from "./services/uploadServices.js";
+import { getFilesMetadata } from "./services/metadataServices.js"
 
 // open/close dialog buttons
 export function initializeEventListeners() {
-    const uploadedFilesList = document.querySelector(".uploaded-files-list");
+    initializeFilePreviewListeners();
+    initializeUploadFormListener();
+}
 
-    // add event listeners to opn / close dialog
+function initializeFilePreviewListeners() {
+    const uploadedFilesList = document.getElementById("file-previews-list");
+
+    // add event listeners to open / close dialog
     uploadedFilesList.addEventListener("click", (event) => {
         if (event.target.classList.contains("file-name")) {
             fileNameButtonSetup(event);
@@ -15,9 +21,11 @@ export function initializeEventListeners() {
             deleteButtonSetup(event);
         }
     });
+}
 
+function initializeUploadFormListener() {
     const uploadForm = document.getElementById("upload-form");
-    uploadForm.addEventListener("submit", (event) => uploadFileAndUpdateMeta(event, uploadForm));
+    uploadForm.addEventListener("submit", (event) => handleUploadFormSubmit);
 }
 
 function fileNameButtonSetup(event) {
@@ -40,9 +48,10 @@ function deleteButtonSetup(event) {
  * @param {*} event - form submit event
  * @param {*} uploadForm - form to upload file
  */
-async function uploadFileAndUpdateMeta(event, uploadForm) {
+async function handleUploadFormSubmit(event) {
     event.preventDefault(); // prevent form from submitting
 
+    const uploadForm = event.target;
     const fileInput = document.getElementById("file-input");
     const file = fileInput.files[0];
 
@@ -58,5 +67,10 @@ async function uploadFileAndUpdateMeta(event, uploadForm) {
 
     const formData = new FormData(uploadForm);
 
-    uploadFile(formData);
+    try {
+        const response = await uploadFileToServer(formData);
+        await updateFileList(response);
+    } catch (error) {
+        console.error("Error during file upload and html update", error);
+    }
 }

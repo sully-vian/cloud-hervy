@@ -1,20 +1,28 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
 const express_1 = require("express");
-const fs_1 = __importDefault(require("fs"));
-const path_1 = require("path");
-const fileController_1 = require("./fileController");
-const upload_1 = require("./upload");
-const router = (0, express_1.Router)();
-router.get("/favicon.ico", (_req, res) => {
-    res.sendFile((0, path_1.join)(__dirname, "public", "logo.png"));
+const handleRoutes_1 = require("./handleRoutes");
+exports.router = (0, express_1.Router)();
+// logging middleware
+function logRoute(req, _res, next) {
+    console.log("Route called: " + req.originalUrl);
+    next();
+}
+exports.router.use(logRoute);
+// main route
+exports.router.get("/", (req, res) => {
+    (0, handleRoutes_1.mainRoute)(req, res);
 });
-router.get("/", (_req, res) => {
-    const uploadedFiles = fs_1.default.readdirSync(upload_1.uploadsDir);
-    res.render("home", { files: uploadedFiles });
+// metadata route
+exports.router.get("/metadata", (req, res) => {
+    (0, handleRoutes_1.metadataRoute)(req, res);
 });
-router.post("/", upload_1.uploads.single("new file"), fileController_1.uploadFile);
-exports.default = router;
+// upload route
+exports.router.post("/upload", (req, res) => {
+    (0, handleRoutes_1.uploadRoute)(req, res);
+});
+// download route (the def of the route sets that "fileName" is a parameter)
+exports.router.get("/download/:fileName", (req, res) => {
+    (0, handleRoutes_1.downloadRoute)(req, res);
+});

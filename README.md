@@ -1,4 +1,4 @@
-# Cloud HERVY: a google drive clone
+# Cloud HERVY: a simple Google Drive clone
 
 ## Installation
 
@@ -32,4 +32,10 @@ to start the server in development mode run:
 
 ```bash
 npm run devStart
+```
+
+to remove all uploaded files and their metadata run:
+
+```bash
+npm run purge
 ```
