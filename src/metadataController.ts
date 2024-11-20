@@ -5,7 +5,7 @@ import { join } from 'path';
 /**
  * Path to the metadata file
  */
-export const metadataFilePath = join(__dirname, '..', 'metadata.json');
+export const metadataFilePath: string = join(__dirname, '..', 'metadata.json');
 
 /**
  * Update the metadata file with the new file metadata
@@ -13,10 +13,10 @@ export const metadataFilePath = join(__dirname, '..', 'metadata.json');
  * @param res Response object
  * @returns An object containing the updated metadata
  */
-export function updateMetadata(req: Request, res: Response): { [key: string]: any } {
+export async function updateMetadata(req: Request, _res: Response): Promise<{ [key: string]: any }> {
     if (!req.file) {
         // should not happen
-        res.status(400).send("No file selected !");
+        console.error("No file uploaded");
         return {};
     }
 
@@ -33,7 +33,7 @@ export function updateMetadata(req: Request, res: Response): { [key: string]: an
         description: req.body["file desc"]
     }
 
-    fs.writeFileSync(metadataFilePath, JSON.stringify(metadata, null, 2), "utf-8");
+    await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 2), "utf-8");
 
     return metadata;
 }
@@ -42,7 +42,7 @@ export function updateMetadata(req: Request, res: Response): { [key: string]: an
  * Get the metadata from the metadata file as an object
  * @returns An object containing the metadata
  */
-export function getMetadata(): { [key: string]: any } {
-    const rawData: string = fs.readFileSync(metadataFilePath, "utf8");
+export async function getMetadata(): Promise<{ [key: string]: any }> {
+    const rawData: string = await fs.promises.readFile(metadataFilePath, "utf8");
     return JSON.parse(rawData);
 }

@@ -1,11 +1,13 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { downloadRoute, mainRoute, metadataRoute, uploadRoute } from "./handleRoutes";
+import { uploads } from "./upload";
 
-export const router = Router();
+export const router: Router = Router();
 
 // logging middleware
 function logRoute(req: Request, _res: Response, next: NextFunction) {
-    console.log("Route called: " + req.originalUrl);
+    const time = new Date().toLocaleTimeString();
+    console.log(`[${time}] Route called: ${req.originalUrl}`);
     next();
 }
 
@@ -21,8 +23,9 @@ router.get("/metadata", (req: Request, res: Response) => {
     metadataRoute(req, res);
 });
 
-// upload route
-router.post("/upload", (req: Request, res: Response) => {
+// upload route is a bit different because some of its logic (file saving) is in the middleware
+router.post("/upload", uploads.single("new file"), (req: Request, res: Response) => {
+    // "new file" is name of input tag
     uploadRoute(req, res);
 });
 

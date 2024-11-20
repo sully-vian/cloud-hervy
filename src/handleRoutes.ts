@@ -13,14 +13,12 @@ export function mainRoute(_req: Request, res: Response): void {
     const metadata = getMetadata();
 
     // render home page with metadata
-    res.render("home", { filesMetadata: metadata }, (err, html) => {
-        if (err) {
-            console.error("Error rendering home page", err);
-            return res.status(500).send("Error rendering home page");
-        }
-
-        res.send(html);
-    });
+    try {
+        res.render("home", { filesMetadata: metadata });
+    } catch (error) {
+        console.error("Error rendering home page:", error);
+        res.status(500).send("Internal Server Error");
+    }
 }
 
 /**
@@ -38,30 +36,29 @@ export function metadataRoute(_req: Request, res: Response): void {
 }
 
 /**
- * Handle the instructions to upload a file
+ * Handle the instructions to upload a file (except the file saving, that's in the middleware).
  * @param req Request object
  * @param res Response object
  * @returns void
  */
-export function uploadRoute(req: Request, res: Response): void {
-    // save file
-    saveFile(req, res);
+export async function uploadRoute(req: Request, res: Response): Promise<void> {
 
     // update metadata
-    const updatedMetadata: { [key: string]: string } = updateMetadata(req, res);
+    const updatedMetadata: { [key: string]: string } = await updateMetadata(req, res);
 
     // render file list preview with updated metadata
-    res.render("_file-preview-list", { filesMetadata: updatedMetadata }, (err, html) => {
+    console.log("Rendering and sending HTML...");
+    res.render("_file-preview-list", { filesMetadata: updatedMetadata }, (err: Error, html: string) => {
         if (err) {
-            return res.status(500).send("Error rendering file list preview");
+            res.status(500).send("Error rendering updated preview list");
+            return;
         }
-
-        // send metadata & rendered html
         res.json({
-            filesMetadata: updatedMetadata,
-            html: html
+            html: html,
+            metadata: updatedMetadata
         });
     });
+    console.log("HTML sent !");
 }
 
 /**

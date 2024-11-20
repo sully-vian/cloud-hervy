@@ -1,17 +1,7 @@
 <li class="file-preview" preview-id="<%= fileMetadata.name %>">
-    <button class="file-name" dialog-id="<%= fileMetadata.name %>">
+    <span class="file-name" dialog-id="<%= fileMetadata.name %>">
         <%= fileMetadata.name %>
-    </button>
-
-    <dialog class="file-info" id="<%= fileMetadata.name %>">
-        <button class="close-button">X</button>
-        <p>Name: <%= fileMetadata.name %></p>
-        <p>Size: <%= (fileMetadata.size / 1024).toFixed(2) %> KB</p>
-        <p>Upload date: <%= fileMetadata.uploadDate %></p>
-        <% if (fileMetadata.description) { %>
-            <p>Description: <%= fileMetadata.description %></p>
-        <% } %>
-    </dialog>
+    </span>
 
     <a href="/download/<%= fileMetadata.name %>">Download</a>
     <button class="delete-button">Delete</button>

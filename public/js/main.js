@@ -1,8 +1,6 @@
-import { initializeEventListeners } from "./eventListeners.js";
 import { resizeInputTextarea } from "./utilities.js";
+import { initializeUploadFormListener } from "./eventListeners/uploadFormListener.js";
 
-initializeEventListeners();
+initializeUploadFormListener();
 
 resizeInputTextarea();
-
-const globalFilesMetadata = {};
