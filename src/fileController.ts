@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { join } from "path";
-import { uploads, uploadsDir } from "./upload";
+import { storageDir } from "./storage";
+import { unlink } from "fs/promises";
 
 /**
  * Download a file from the server (send download prompt to the client)
@@ -11,15 +12,14 @@ import { uploads, uploadsDir } from "./upload";
 export function downloadFile(req: Request, res: Response): void {
     const fileName: string = req.params["fileName"];
     console.log(`Downloading ${fileName}...`);
-    res.download(join(uploadsDir, fileName));
+    res.download(join(storageDir, fileName));
 }
 
 /**
- * Save the file uploaded by the client
- * @param req Request object
- * @param res Response object
- * @returns void
+ * Delete a file from the server
+ * @param fileName Name of the file to delete
  */
-export function saveFile(_req: Request, _res: Response): void {
-    uploads.single("new file");
+export async function deleteFile(fileName: string): Promise<void> {
+    const filePath: string = join(storageDir, fileName);
+    await unlink(filePath);
 }

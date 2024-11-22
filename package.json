@@ -7,7 +7,7 @@
     "start": "node ./build/server.js",
     "build": "tsc",
     "dev": "nodemon --exec ts-node ./src/server.ts",
-    "purge": "rm -f ./uploads/* && echo \"{}\" > ./metadata.json"
+    "purge": "rm -f ./storage/* && echo \"{}\" > ./metadata.json"
   },
   "repository": {
     "type": "git",

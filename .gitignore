@@ -1,4 +1,4 @@
-uploads/
+storage/
 node_modules/
 metadata.json
 server.key

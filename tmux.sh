@@ -5,11 +5,6 @@
 PROJECT_DIR="$HOME/Desktop/cloud-hervy"
 SESSION_NAME="cloud-hervy"
 
-if [ -n "$TMUX" ]; then
-    echo "You're already inside a tmux session!"
-    tmux detach
-fi
-
 # check if the session already exists
 
 if ! tmux has-session -t $SESSION_NAME 2>/dev/null; then
@@ -28,4 +23,9 @@ if ! tmux has-session -t $SESSION_NAME 2>/dev/null; then
     tmux select-pane -t $SESSION_NAME:0.0
 fi
 
-tmux attach -t $SESSION_NAME
+# switch or attach
+if [ -n "$TMUX" ]; then
+    tmux switch-client -t $SESSION_NAME
+else
+    tmux attach-session -t $SESSION_NAME
+fi

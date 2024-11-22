@@ -4,7 +4,7 @@ import path from "path";
 import https from "https";
 import { getLocalIpAddress } from "./networkUtils";
 import { router } from "./router";
-import { uploadsDir } from "./upload";
+import { storageDir } from "./storage";
 import { metadataFilePath } from "./metadataController";
 
 const app = express();
@@ -13,8 +13,8 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
-// create uploads directory and metadata file if they don't exist
-fs.mkdirSync(uploadsDir, { recursive: true });
+// create storage directory and metadata file if they don't exist
+fs.mkdirSync(storageDir, { recursive: true });
 if (!fs.existsSync(metadataFilePath)) {
     fs.writeFileSync(metadataFilePath, "{}", "utf-8");
 }

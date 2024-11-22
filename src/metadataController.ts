@@ -9,28 +9,21 @@ export const metadataFilePath: string = join(__dirname, '..', 'metadata.json');
 
 /**
  * Update the metadata file with the new file metadata
- * @param req Request object
- * @param res Response object
- * @returns An object containing the updated metadata
+ * @param file File to add metadata for
+ * @param fileDesc Description of the file
  */
-export async function updateMetadata(req: Request, _res: Response): Promise<{ [key: string]: any }> {
-    if (!req.file) {
-        // should not happen
-        console.error("No file uploaded");
-        return {};
-    }
+export async function addAndGetMetadata(file: Express.Multer.File, fileDesc: string): Promise<{ [key: string]: any }> {
 
     console.log("Updating metadata...");
     const rawData: string = fs.readFileSync(metadataFilePath, "utf8"); // read metadata file
     const metadata: { [key: string]: any } = JSON.parse(rawData); // parse metadata file
 
-    const file: Express.Multer.File = req.file;
     metadata[file.originalname] = {
         name: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
         uploadDate: new Date().toISOString().split("T")[0],
-        description: req.body["file desc"]
+        description: fileDesc
     }
 
     await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 2), "utf-8");
@@ -45,4 +38,18 @@ export async function updateMetadata(req: Request, _res: Response): Promise<{ [k
 export async function getMetadata(): Promise<{ [key: string]: any }> {
     const rawData: string = await fs.promises.readFile(metadataFilePath, "utf8");
     return JSON.parse(rawData);
+}
+
+/**
+ * Delete the metadata of a file
+ * @param fileName Name of the file to delete
+ * @returns The updated metadata
+ */
+export async function removeAndGetMetadata(fileName: string): Promise<{ [key: string]: any }> {
+    const rawData: string = fs.readFileSync(metadataFilePath, "utf8");
+    const metadata: { [key: string]: any } = JSON.parse(rawData);
+    delete metadata[fileName];
+    await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 2), "utf-8");
+
+    return metadata;
 }

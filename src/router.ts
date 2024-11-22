@@ -1,6 +1,6 @@
 import { Request, Response, Router, NextFunction } from "express";
-import { downloadRoute, mainRoute, metadataRoute, uploadRoute } from "./handleRoutes";
-import { uploads } from "./upload";
+import { downloadRoute, mainRoute, metadataRoute, uploadRoute, deleteRoute } from "./handleRoutes";
+import { storage } from "./storage";
 
 export const router: Router = Router();
 
@@ -24,7 +24,7 @@ router.get("/metadata", (req: Request, res: Response) => {
 });
 
 // upload route is a bit different because some of its logic (file saving) is in the middleware
-router.post("/upload", uploads.single("new file"), (req: Request, res: Response) => {
+router.post("/upload", storage.single("new file"), (req: Request, res: Response) => {
     // "new file" is name of input tag
     uploadRoute(req, res);
 });
@@ -34,3 +34,6 @@ router.get("/download/:fileName", (req: Request, res: Response) => {
     downloadRoute(req, res);
 });
 
+router.delete("/delete/:fileName", (req: Request, res: Response) => {
+    deleteRoute(req, res);
+});
