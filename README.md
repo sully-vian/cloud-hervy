@@ -31,7 +31,7 @@ npm run build
 to start the server in development mode run:
 
 ```bash
-npm run devStart
+npm run dev
 ```
 
 to remove all uploaded files and their metadata run:
