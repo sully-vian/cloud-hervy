@@ -12,7 +12,6 @@ export async function updateFilesMetadata(newFilesMetadata) {
     }
 
     // fetch files metadata
-    console.log("fetching /metadata");
     const res = await fetch("/metadata");
     if (!res.ok) {
         throw new Error("failed to load files metadata");

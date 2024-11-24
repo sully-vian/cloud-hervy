@@ -9,28 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.downloadFile = downloadFile;
-exports.deleteFile = deleteFile;
-const path_1 = require("path");
-const storage_1 = require("./storage");
-const promises_1 = require("fs/promises");
+exports.renderAndSendPreviewList = renderAndSendPreviewList;
 /**
- * Download a file from the server (send download prompt to the client)
- * @param req Request object
+ * Render and send the preview list of files with metadata
  * @param res Response object
- * @returns void
+ * @param metadata Metadata of the files
  */
-function downloadFile(req, res) {
-    const fileName = req.params["fileName"];
-    res.download((0, path_1.join)(storage_1.storageDir, fileName));
-}
-/**
- * Delete a file from the server
- * @param fileName Name of the file to delete
- */
-function deleteFile(fileName) {
+function renderAndSendPreviewList(res, metadata) {
     return __awaiter(this, void 0, void 0, function* () {
-        const filePath = (0, path_1.join)(storage_1.storageDir, fileName);
-        yield (0, promises_1.unlink)(filePath);
+        res.render("_file-previews-list", { filesMetadata: metadata }, (err, html) => {
+            if (err) {
+                res.status(500).send("Error rendering updated preview list");
+                return;
+            }
+            res.json({
+                html: html,
+                metadata: metadata
+            });
+        });
     });
 }
+;

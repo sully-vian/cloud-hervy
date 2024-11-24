@@ -17,6 +17,7 @@ export async function handleUpload(uploadForm) {
 
     const formData = new FormData(uploadForm);
     const res = await uploadFileToServer(formData);
+    uploadForm.reset();
     updateFromResponse(res);
 }
 
@@ -34,8 +35,6 @@ async function uploadFileToServer(data) {
         if (!response.ok) {
             throw new Error("Failed to upload file");
         }
-
-        console.log("File uploaded successfully");
         return response;
 
     } catch (error) {

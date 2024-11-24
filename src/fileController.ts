@@ -11,7 +11,6 @@ import { unlink } from "fs/promises";
  */
 export function downloadFile(req: Request, res: Response): void {
     const fileName: string = req.params["fileName"];
-    console.log(`Downloading ${fileName}...`);
     res.download(join(storageDir, fileName));
 }
 

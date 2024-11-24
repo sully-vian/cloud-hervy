@@ -13,8 +13,6 @@ export const metadataFilePath: string = join(__dirname, '..', 'metadata.json');
  * @param fileDesc Description of the file
  */
 export async function addAndGetMetadata(file: Express.Multer.File, fileDesc: string): Promise<{ [key: string]: any }> {
-
-    console.log("Updating metadata...");
     const rawData: string = fs.readFileSync(metadataFilePath, "utf8"); // read metadata file
     const metadata: { [key: string]: any } = JSON.parse(rawData); // parse metadata file
 
@@ -50,6 +48,5 @@ export async function removeAndGetMetadata(fileName: string): Promise<{ [key: st
     const metadata: { [key: string]: any } = JSON.parse(rawData);
     delete metadata[fileName];
     await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 2), "utf-8");
-    console.log(metadata);
     return metadata;
 }

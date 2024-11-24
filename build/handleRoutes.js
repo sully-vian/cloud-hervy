@@ -1,11 +1,22 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mainRoute = mainRoute;
-exports.metadataRoute = metadataRoute;
+exports.reloadRoute = reloadRoute;
 exports.uploadRoute = uploadRoute;
 exports.downloadRoute = downloadRoute;
+exports.deleteRoute = deleteRoute;
 const fileController_1 = require("./fileController");
 const metadataController_1 = require("./metadataController");
+const utils_1 = require("./utils");
 /**
  * Handle the main route
  * @param req Request object
@@ -13,58 +24,68 @@ const metadataController_1 = require("./metadataController");
  * @returns void
  */
 function mainRoute(_req, res) {
-    // get metadata
-    const metadata = (0, metadataController_1.getMetadata)();
-    // render home page with metadata
-    res.render("home", { filesMetadata: metadata }, (err, html) => {
-        if (err) {
-            console.error("Error rendering home page", err);
-            return res.status(500).send("Error rendering home page");
+    return __awaiter(this, void 0, void 0, function* () {
+        // get metadata
+        const metadata = yield (0, metadataController_1.getMetadata)();
+        // render home page with metadata
+        try {
+            res.render("home", {
+                filesMetadata: {},
+                loading: true
+            });
         }
-        res.send(html);
+        catch (error) {
+            console.error("Error rendering home page:", error);
+            res.status(500).send("Internal Server Error");
+        }
     });
 }
 /**
- * Handle the metadata route (send metadata to the client)
- * @param req Request object
+ * Send new metadata and HTML preview list
+ * @param _req Request object (not used)
  * @param res Response object
- * @returns void
  */
-function metadataRoute(_req, res) {
-    // get metadata
-    const metadata = (0, metadataController_1.getMetadata)();
-    // send metadata
-    res.json({ metadata: metadata });
+function reloadRoute(_req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // get metadata
+        const metadata = yield (0, metadataController_1.getMetadata)();
+        (0, utils_1.renderAndSendPreviewList)(res, metadata);
+    });
 }
 /**
- * Handle the instructions to upload a file
+ * Handle the instructions to upload a file (except the file saving, that's in the middleware).
  * @param req Request object
  * @param res Response object
  * @returns void
  */
 function uploadRoute(req, res) {
-    // save file
-    (0, fileController_1.saveFile)(req, res);
-    // update metadata
-    const updatedMetadata = (0, metadataController_1.updateMetadata)(req, res);
-    // render file list preview with updated metadata
-    res.render("_file-preview-list", { filesMetadata: updatedMetadata }, (err, html) => {
-        if (err) {
-            return res.status(500).send("Error rendering file list preview");
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!req.file) {
+            // should not happen
+            console.error("No file uploaded");
+            return;
         }
-        // send metadata & rendered html
-        res.json({
-            filesMetadata: updatedMetadata,
-            html: html
-        });
+        const updatedMetadata = yield (0, metadataController_1.addAndGetMetadata)(req.file, req.body["file desc"]);
+        (0, utils_1.renderAndSendPreviewList)(res, updatedMetadata);
     });
 }
 /**
  * Handle the instructions to download a file
  * @param req Request object
  * @param res Response object
- * @returns void
  */
 function downloadRoute(req, res) {
     (0, fileController_1.downloadFile)(req, res);
+}
+/**
+ * Handle the instructions to delete a file
+ * @param req Request object
+ * @param res Response object
+ */
+function deleteRoute(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        (0, fileController_1.deleteFile)(req.params["fileName"]);
+        const updatedMetadata = yield (0, metadataController_1.removeAndGetMetadata)(req.params["fileName"]);
+        (0, utils_1.renderAndSendPreviewList)(res, updatedMetadata);
+    });
 }

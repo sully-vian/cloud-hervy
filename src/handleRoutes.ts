@@ -67,7 +67,6 @@ export function downloadRoute(req: Request, res: Response): void {
  * @param res Response object
  */
 export async function deleteRoute(req: Request, res: Response): Promise<void> {
-    console.log(`Deleting ${req.params["fileName"]}...`);
     deleteFile(req.params["fileName"]);
     const updatedMetadata = await removeAndGetMetadata(req.params["fileName"]);
     renderAndSendPreviewList(res, updatedMetadata);

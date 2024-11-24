@@ -32,7 +32,6 @@ export async function ExtractHTMLAndMetadata(response) {
 export async function updateFileList(html) {
     try {
         document.getElementById("file-previews-list").innerHTML = html;
-        console.log("File list updated successfully");
     } catch (error) {
         console.error("Error when updating file list", error);
     }

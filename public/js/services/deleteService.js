@@ -22,7 +22,6 @@ async function deleteFileFromServer(fileName) {
         if (!response.ok) {
             throw new Error("Failed to delete file");
         }
-        console.log("File deleted successfully");
         return response;
     } catch (error) {
         console.error("Error when deleting file", error);
