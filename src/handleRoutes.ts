@@ -15,7 +15,10 @@ export async function mainRoute(_req: Request, res: Response): Promise<void> {
 
     // render home page with metadata
     try {
-        res.render("home", { filesMetadata: metadata });
+        res.render("home", {
+            filesMetadata: {},
+            loading: true
+        });
     } catch (error) {
         console.error("Error rendering home page:", error);
         res.status(500).send("Internal Server Error");

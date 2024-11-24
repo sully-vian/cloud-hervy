@@ -25,7 +25,11 @@
         <button id="reload-button">Reload files</button>
     </section>
     <section id="file-previews-list">
-        <%- include("_file-previews-list.ejs", {filesMetadata: filesMetadata}); %>
+        <% if (loading) { %>
+            <p>Loading...</p>
+        <% } else { %>
+            <%- include("_file-previews-list.ejs", {filesMetadata: filesMetadata}); %>
+        <% } %>
     </section>
 </body>
 

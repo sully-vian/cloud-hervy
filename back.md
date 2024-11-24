@@ -13,32 +13,13 @@ Server                     Client
 server side:
 
 - read metadata
-- render home.ejs with metadata
+- render home.ejs with `metadata={}` and `loading=true`
 - home.ejs
 
 client side:
 
 - render home
-- fetch "/metadata"
-
-## Metadata route
-
-```plaintext
-           "/metadata"
-       <------------------
-Server                     Client
-       ------------------>
-       - metadata object
-```
-
-server side:
-
-- read metadata
-- send metadata
-
-client side:
-
-- store metadata
+- fetch "/reload"
 
 ## Upload route
 
@@ -47,7 +28,7 @@ client side:
        <---------------------------------
 Server                                    Client
        --------------------------------->
-       - rendered _file-preview-list.ejs
+       - rendered _file-previews-list.ejs
        - updated metadata
 ```
 
@@ -55,8 +36,8 @@ server side:
 
 - save file
 - update metadata
-- render _file-preview-list.ejs
-- send metadata & _file-preview-list.ejs
+- render _file-previews-list.ejs
+- send metadata & _file-previews-list.ejs
 
 client side:
 
@@ -88,7 +69,7 @@ client side:
        <---------------------
 Server                       Client
        -------------------->
-        - rendered _file-preview-list.ejs
+        - rendered _file-previews-list.ejs
         - updated metadata
 ```
 
@@ -96,8 +77,30 @@ server side:
 
 - delete file
 - update metadata
-- render _file-preview-list.ejs
-- send metadata & _file-preview-list.ejs
+- render _file-previews-list.ejs
+- send metadata & _file-previews-list.ejs
+
+client side:
+
+- replace file-preview-list
+- replace metadata
+
+## Reload route
+
+```plaintext
+               "/reload"
+       <------------------
+Server                     Client
+       ------------------>
+       - rendered _file-previews-list.ejs
+       - metadata
+```
+
+server side:
+
+- read metadata
+- render _file-previews-list.ejs
+- send metadata & _file-previews-list.ejs
 
 client side:
 
