@@ -24,9 +24,8 @@
         </form>
         <button id="reload-button">Reload files</button>
     </section>
-    <section id="uploaded-files">
-        <h2>Uploaded files</h2>
-        <%- include("_file-preview-list.ejs", {filesMetadata: filesMetadata}); %>
+    <section id="file-previews-list">
+        <%- include("_file-previews-list.ejs", {filesMetadata: filesMetadata}); %>
     </section>
 </body>
 

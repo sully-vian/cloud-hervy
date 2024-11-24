@@ -30,9 +30,8 @@ export async function ExtractHTMLAndMetadata(response) {
  * @returns {Promise<void>} - A promise that resolves when the file list is updated
  */
 export async function updateFileList(html) {
-    console.log(html);
     try {
-        document.getElementById("uploaded-files").innerHTML = html;
+        document.getElementById("file-previews-list").innerHTML = html;
         console.log("File list updated successfully");
     } catch (error) {
         console.error("Error when updating file list", error);

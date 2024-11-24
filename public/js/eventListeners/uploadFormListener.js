@@ -12,8 +12,8 @@ function getUploadForm() {
  */
 export function initializeUploadFormListener() {
     const uploadForm = getUploadForm();
-    uploadForm.addEventListener("submit", (event) => {
+    uploadForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        handleUpload(uploadForm);
+        await handleUpload(uploadForm);
     });
 }
