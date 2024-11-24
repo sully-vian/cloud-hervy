@@ -1,5 +1,9 @@
 <ul id="file-previews-list">
-    <% Object.keys(filesMetadata).forEach(fileName => { %>
-        <%- include("_file-preview.ejs", {fileMetadata: filesMetadata[fileName]}); %>
-    <% }); %>
+    <% if (Object.keys(filesMetadata).length === 0) { %>
+        <li>No files uploaded yet</li>
+    <% } else { %>
+        <% Object.keys(filesMetadata).forEach(fileName => { %>
+            <%- include("_file-preview.ejs", {fileMetadata: filesMetadata[fileName]}); %>
+        <% }); %>
+    <% } %>
 </ul>

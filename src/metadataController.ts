@@ -37,7 +37,7 @@ export async function addAndGetMetadata(file: Express.Multer.File, fileDesc: str
  */
 export async function getMetadata(): Promise<{ [key: string]: any }> {
     const rawData: string = await fs.promises.readFile(metadataFilePath, "utf8");
-    return JSON.parse(rawData);
+    return await JSON.parse(rawData);
 }
 
 /**
@@ -50,6 +50,6 @@ export async function removeAndGetMetadata(fileName: string): Promise<{ [key: st
     const metadata: { [key: string]: any } = JSON.parse(rawData);
     delete metadata[fileName];
     await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 2), "utf-8");
-
+    console.log(metadata);
     return metadata;
 }

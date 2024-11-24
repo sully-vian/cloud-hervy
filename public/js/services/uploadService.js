@@ -1,11 +1,12 @@
-import { fileInput } from "../variables.js";
-import { updateFilesMetadata } from "./metadataService.js";
-import { filesMetadata, uploadForm } from "../variables.js";
+import { updateFromResponse } from "../utils.js";
+import { filesMetadata } from "./metadataService.js";
 
 /**
  * Handle the file upload process
+ * @param {HTMLFormElement} uploadForm - The form element containing the file to upload
  */
-export async function handleUpload() {
+export async function handleUpload(uploadForm) {
+    const fileInput = getFileInput();
     const file = fileInput.files[0];
 
     // check if file with same name already exists
@@ -15,23 +16,14 @@ export async function handleUpload() {
     }
 
     const formData = new FormData(uploadForm);
-
     const res = await uploadFileToServer(formData);
-    try {
-        console.log("raw response", res.clone().text());
-        const data = await res.json();
-        const html = data.html;
-        updateFileList(html);
-    } catch (error) {
-        console.error("Error when parsing response", error);
-    }
+    updateFromResponse(res);
 }
 
 /**
  * Upload file to server
  * @param {FormData} data - FormData object containing file to upload
- * @returns {Promise<Response>} - The response from the server (hopefully the
- *                                updated html of the page)
+ * @returns {Promise<Response>} - The response from the server (new metadata + new html)
  */
 async function uploadFileToServer(data) {
     try {
@@ -52,15 +44,9 @@ async function uploadFileToServer(data) {
 }
 
 /**
- * Update the file list on the page (server renders _file-previews-list.ejs)
- * @param {string} html - The html to update the file list with
- * @returns {Promise<void>} - A promise that resolves when the file list is updated
+ * Get the file input element
+ * @returns {HTMLElement} - The file input element
  */
-async function updateFileList(html) {
-    try {
-        document.getElementById("uploaded-files").innerHTML = html;
-        console.log("File list updated successfully");
-    } catch (error) {
-        console.error("Error when updating file list", error);
-    }
+function getFileInput() {
+    return document.getElementById("file-input");
 }

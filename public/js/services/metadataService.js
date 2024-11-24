@@ -1,4 +1,4 @@
-import { filesMetadata } from "../variables.js";
+export let filesMetadata = {};
 
 /**
  * Update the files metadata (fetch if not provided)

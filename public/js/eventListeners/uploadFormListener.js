@@ -1,14 +1,19 @@
-// This module contains event listeners for the upload form.
-
 import { handleUpload } from "../services/uploadService.js";
-import { uploadForm } from "../variables.js";
 
+/**
+ * Get the upload form element
+ * @returns {HTMLElement} - The upload form element
+ */
+function getUploadForm() {
+    return document.getElementById("upload-form");
+}
 /**
  * Add event listener to upload form to dispatch custom event
  */
 export function initializeUploadFormListener() {
+    const uploadForm = getUploadForm();
     uploadForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        handleUpload();
+        handleUpload(uploadForm);
     });
 }

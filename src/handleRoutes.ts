@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { deleteFile, downloadFile } from './fileController';
 import { getMetadata, addAndGetMetadata, removeAndGetMetadata } from './metadataController';
+import { renderAndSendPreviewList } from './utils';
 
 /**
  * Handle the main route
@@ -22,17 +23,14 @@ export async function mainRoute(_req: Request, res: Response): Promise<void> {
 }
 
 /**
- * Handle the metadata route (send metadata to the client)
- * @param req Request object
+ * Send new metadata and HTML preview list
+ * @param _req Request object (not used)
  * @param res Response object
- * @returns void
  */
-export function metadataRoute(_req: Request, res: Response): void {
+export async function reloadRoute(_req: Request, res: Response): Promise<void> {
     // get metadata
-    const metadata = getMetadata();
-
-    // send metadata
-    res.json({ metadata: metadata });
+    const metadata = await getMetadata();
+    renderAndSendPreviewList(res, metadata);
 }
 
 /**
@@ -42,54 +40,32 @@ export function metadataRoute(_req: Request, res: Response): void {
  * @returns void
  */
 export async function uploadRoute(req: Request, res: Response): Promise<void> {
-
     if (!req.file) {
         // should not happen
         console.error("No file uploaded");
         return;
     }
-    // update metadata
     const updatedMetadata: { [key: string]: string } = await addAndGetMetadata(req.file, req.body["file desc"]);
-
-    // render file list preview with updated metadata
-    console.log("Rendering and sending HTML and metadata...");
-    res.render("_file-preview-list", { filesMetadata: updatedMetadata }, (err: Error, html: string) => {
-        if (err) {
-            res.status(500).send("Error rendering updated preview list");
-            return;
-        }
-        res.json({
-            html: html,
-            metadata: updatedMetadata
-        });
-    });
-    console.log("HTML & metadata sent !");
+    renderAndSendPreviewList(res, updatedMetadata);
 }
 
 /**
  * Handle the instructions to download a file
  * @param req Request object
  * @param res Response object
- * @returns void
  */
 export function downloadRoute(req: Request, res: Response): void {
     downloadFile(req, res);
 }
 
-export function deleteRoute(req: Request, res: Response): void {
+/**
+ * Handle the instructions to delete a file
+ * @param req Request object
+ * @param res Response object
+ */
+export async function deleteRoute(req: Request, res: Response): Promise<void> {
+    console.log(`Deleting ${req.params["fileName"]}...`);
     deleteFile(req.params["fileName"]);
-    const updatedMetadata = removeAndGetMetadata(req.params["fileName"]);
-
-    console.log("Rendering and sending HTML and metadata...");
-    res.render("_file-preview-list", { filesMetadata: updatedMetadata }, (err: Error, html: string) => {
-        if (err) {
-            res.status(500).send("Error rendering updated preview list");
-            return;
-        }
-        res.json({
-            html: html,
-            metadata: updatedMetadata
-        });
-    });
-    console.log("HTML & metadata sent !");
+    const updatedMetadata = await removeAndGetMetadata(req.params["fileName"]);
+    renderAndSendPreviewList(res, updatedMetadata);
 }
