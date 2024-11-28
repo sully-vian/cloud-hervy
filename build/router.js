@@ -32,3 +32,6 @@ exports.router.get("/download/:fileName", (req, res) => {
 exports.router.delete("/delete/:fileName", (req, res) => {
     (0, handleRoutes_1.deleteRoute)(req, res);
 });
+exports.router.get("/preview/:fileName", (req, res) => {
+    (0, handleRoutes_1.previewRoute)(req, res);
+});

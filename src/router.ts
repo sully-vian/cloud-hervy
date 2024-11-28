@@ -1,5 +1,5 @@
 import { Request, Response, Router, NextFunction } from "express";
-import { downloadRoute, mainRoute, reloadRoute, uploadRoute, deleteRoute } from "./handleRoutes";
+import { downloadRoute, mainRoute, reloadRoute, uploadRoute, deleteRoute, previewRoute } from "./handleRoutes";
 import { storage } from "./storage";
 
 export const router: Router = Router();
@@ -36,4 +36,8 @@ router.get("/download/:fileName", (req: Request, res: Response) => {
 
 router.delete("/delete/:fileName", (req: Request, res: Response) => {
     deleteRoute(req, res);
+});
+
+router.get("/preview/:fileName", (req: Request, res: Response) => {
+    previewRoute(req, res);
 });

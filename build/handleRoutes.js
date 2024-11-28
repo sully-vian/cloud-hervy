@@ -14,9 +14,11 @@ exports.reloadRoute = reloadRoute;
 exports.uploadRoute = uploadRoute;
 exports.downloadRoute = downloadRoute;
 exports.deleteRoute = deleteRoute;
+exports.previewRoute = previewRoute;
 const fileController_1 = require("./fileController");
 const metadataController_1 = require("./metadataController");
 const utils_1 = require("./utils");
+const filePreviewer_1 = require("./filePreviewer");
 /**
  * Handle the main route
  * @param req Request object
@@ -87,5 +89,10 @@ function deleteRoute(req, res) {
         (0, fileController_1.deleteFile)(req.params["fileName"]);
         const updatedMetadata = yield (0, metadataController_1.removeAndGetMetadata)(req.params["fileName"]);
         (0, utils_1.renderAndSendPreviewList)(res, updatedMetadata);
+    });
+}
+function previewRoute(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        (0, filePreviewer_1.previewFile)(res, req.params["fileName"]);
     });
 }

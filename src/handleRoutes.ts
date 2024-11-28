@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { deleteFile, downloadFile } from './fileController';
 import { getMetadata, addAndGetMetadata, removeAndGetMetadata } from './metadataController';
 import { renderAndSendPreviewList } from './utils';
+import { devNull } from 'os';
+import { previewFile } from './filePreviewer';
 
 /**
  * Handle the main route
@@ -70,4 +72,8 @@ export async function deleteRoute(req: Request, res: Response): Promise<void> {
     deleteFile(req.params["fileName"]);
     const updatedMetadata = await removeAndGetMetadata(req.params["fileName"]);
     renderAndSendPreviewList(res, updatedMetadata);
+}
+
+export async function previewRoute(req: Request, res: Response): Promise<void> {
+    previewFile(res, req.params["fileName"]);
 }

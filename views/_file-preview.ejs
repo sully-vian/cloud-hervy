@@ -1,7 +1,7 @@
 <li class="file-preview" id="<%= fileMetadata.name %>">
-    <span class="file-name">
+    <a href="/preview/<%= fileMetadata.name %>" target="_blank">
         <%= fileMetadata.name %>
-    </span>
+    </a>
 
     <a href="/download/<%= fileMetadata.name %>">Download</a>
     <button class="delete-button">Delete</button>
